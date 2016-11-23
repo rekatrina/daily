@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from views import checkout
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^wechat',checkout)
 ]
