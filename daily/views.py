@@ -109,6 +109,7 @@ def get_dhcp_page():
 
 def get_dhcp_list(cont):
     pattern = r'DHCPDynList=new Array\((.*?)\);'
+
     tmp = re.findall(pattern, cont, flags=re.DOTALL)
     list = re.findall('"(.*?)"', tmp[0])
     user_list = []
@@ -160,7 +161,7 @@ def send_wechat_msg(msg, toUser):
     post_data["agentid"] = 1
     post_data["safe"] = "0"
     post_data["text"] = msg_content
-    jdata = json.dumps(post_data)
+    jdata = json.dumps(post_data, ensure_ascii=False)
     req = urllib2.urlopen(url, jdata)
     return req
 
