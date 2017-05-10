@@ -96,6 +96,7 @@ def wechat_request(request):
 
 
 def get_dhcp_page():
+    print 1;
     login_user = 'admin'
     login_pw = 'password'
     url = local_settings.url
@@ -108,6 +109,7 @@ def get_dhcp_page():
 
 
 def get_dhcp_list(cont):
+    print 2;
     pattern = r'DHCPDynList=new Array\((.*?)\);'
 
     tmp = re.findall(pattern, cont, flags=re.DOTALL)
@@ -146,8 +148,12 @@ def get_token():
     values = {'corpid': local_settings.corpid, 'corpsecret': local_settings.corpsecret}
     url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid="\
           + values['corpid'] + "&corpsecret=" + values['corpsecret']
-    response = urllib2.urlopen(url).read()
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36"}
+    urlreq = urllib2.Request(url=url, headers=headers)
+    #response = urllib2.urlopen(url).read()
+    response = urllib2.urlopen(urlreq).read()
     token_info = json.loads(response)
+    print 'we get token as:'
     print token_info['access_token']
     return token_info['access_token']
 
@@ -161,8 +167,11 @@ def send_wechat_msg(msg, toUser):
     post_data["agentid"] = 1
     post_data["safe"] = "0"
     post_data["text"] = msg_content
-    jdata = json.dumps(post_data, ensure_ascii=False)
+    jdata = json.dumps(post_data,  ensure_ascii=False)
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36"}
+    urlreq = urllib2.Request(url=url, headers=headers, data=jdata)
     req = urllib2.urlopen(url, jdata)
+    print req.read()
     return req
 
 class checker(threading.Thread):
